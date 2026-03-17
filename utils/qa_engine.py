@@ -1,13 +1,20 @@
 import os
 import numpy as np
 import faiss
+import streamlit as st
 from sentence_transformers import SentenceTransformer
 from openai import OpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+def get_api_key():
+    try:
+        return st.secrets["OPENAI_API_KEY"]
+    except:
+        return os.getenv("OPENAI_API_KEY")
+
+client = OpenAI(api_key=get_api_key())
 embedder = SentenceTransformer("all-MiniLM-L6-v2")
 
 
