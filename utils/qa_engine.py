@@ -1,21 +1,21 @@
 import os
 import numpy as np
 import faiss
-import streamlit as st
 from sentence_transformers import SentenceTransformer
 from openai import OpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
 
-def get_api_key():
-    try:
-        return st.secrets["OPENAI_API_KEY"]
-    except:
-        return os.getenv("OPENAI_API_KEY")
-
-client = OpenAI(api_key=get_api_key())
 embedder = SentenceTransformer("all-MiniLM-L6-v2")
+
+def get_client():
+    try:
+        import streamlit as st
+        key = st.secrets["OPENAI_API_KEY"]
+    except Exception:
+        key = os.getenv("OPENAI_API_KEY")
+    return OpenAI(api_key=key)
 
 
 def build_index(chunks: list[dict]) -> tuple:
@@ -36,6 +36,7 @@ def retrieve(query: str, index, chunks: list[dict], top_k: int = 4) -> list[dict
 
 
 def answer(query: str, context_chunks: list[dict]) -> str:
+    client = get_client()
     context = "\n\n".join([f"[Page {c['page']}]: {c['text']}" for c in context_chunks])
     prompt = f"""You are a helpful assistant answering questions about a document.
 Use ONLY the context below to answer. If the answer isn't in the context, say so clearly.
