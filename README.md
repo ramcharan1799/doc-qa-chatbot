@@ -1,5 +1,7 @@
 # Document Q&A Chatbot
 
+🔗 **Live Demo:** https://doc-app-chatbot.streamlit.app
+
 An AI-powered chatbot that answers questions about any PDF document using RAG (Retrieval-Augmented Generation).
 
 ## How it works
